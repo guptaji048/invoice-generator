@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { Typography, Grid, TextField, Button, IconButton } from '@material-ui/core';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { calcGrandTotal } from './helpers/TotalCalcHelper';
 
-function ProductDetails({ productData, setProductData, setInvoiceData, invoiceData }) {
+function ProductDetails({ productData, setProductData }) {
 
   const validateData = (idx) => {
     const temp = [];
@@ -122,12 +123,17 @@ function ProductDetails({ productData, setProductData, setInvoiceData, invoiceDa
         <Grid item md={6}>
           <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
             <Typography variant="h6" style={{ paddingRight: 38 }}>Grand Total </Typography>
-            <Typography variant="h6">{calcGrandTotal(productData)}</Typography>
+            <Typography variant="h6">₹ {calcGrandTotal(productData)}</Typography>
           </div>
         </Grid>
       </Grid>
     </React.Fragment>
   )
+}
+
+ProductDetails.propTypes = {
+  productData: PropTypes.array.isRequired,
+  setProductData: PropTypes.func.isRequired,
 }
 
 export default ProductDetails;
