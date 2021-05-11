@@ -1,11 +1,6 @@
 import React, { useEffect } from 'react';
 import { Typography, Grid, TextField, Button, IconButton } from '@material-ui/core';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { calcGrandTotal } from './helpers/TotalCalcHelper';
 
@@ -97,7 +92,7 @@ function ProductDetails({ productData, setProductData, setInvoiceData, invoiceDa
                   />
                 </TableCell>
                 <TableCell>
-                  {productRow['Total Amount']}
+                  ₹ {productRow['Total Amount']}
                 </TableCell>
                 <TableCell>
                   <IconButton
