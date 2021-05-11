@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useHistory, generatePath } from 'react-router-dom';
 import { Container, Typography, Divider, makeStyles, Grid, TextField, Checkbox, FormControlLabel, Button } from '@material-ui/core';
 import ReceiverDetails from './forms/ReceiverDetails';
 import BillingDetails from './forms/BillingDetails';
@@ -13,10 +14,10 @@ const useStyles = makeStyles(() => ({
 
 function InvoiceForm() {
   const classes = useStyles();
+  const history = useHistory();
   const [invoiceData, setInvoiceData] = useState({
     invoiceDate: '',
     dueDate: '',
-    grandTotal: 0,
   });
   const [receiverData, setReceiverData] = useState({
     name: '',
@@ -67,7 +68,6 @@ function InvoiceForm() {
   const handleSubmitData = (e) => {
     e.preventDefault();
     const newDataObject = {
-      id: 18,
       invoiceDate: invoiceData.invoiceDate,
       dueDate: invoiceData.dueDate,
       grandTotal: calcGrandTotal(productData),
@@ -82,7 +82,7 @@ function InvoiceForm() {
         "Raised to": receiverData.name,
         Address: billingData.address,
         State: billingData.state,
-        City: billingData.state,
+        City: billingData.city,
         "Pin Code": billingData.pincode,
       },
       products: productData,
@@ -95,7 +95,32 @@ function InvoiceForm() {
     fetch('https://6099126599011f0017140143.mockapi.io/invoice/addinvoice', requestOptions)
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        const invoiceId = data.id;
+        history.push({ pathname: generatePath("/invoice/:invoiceId", { invoiceId }) });
+        setInvoiceData({
+          invoiceDate: '',
+          dueDate: '',
+        });
+        setReceiverData({
+          name: '',
+          address: '',
+          state: '',
+          city: '',
+          pincode: '',
+        });
+        setBillingData({
+          address: '',
+          state: '',
+          city: '',
+          pincode: '',
+        });
+        setProductData([{
+          'Product Name': '',
+          'Quantity': 0,
+          'Base Amount': 0,
+          'Total Amount': 0,
+        }]);
+        setBillingFlag(false);
       });
   };
 
@@ -106,8 +131,8 @@ function InvoiceForm() {
   return (
     <div style={{ margin: 10, padding: 10, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <Container maxWidth="md" className={classes.container}>
-        <Typography variant="h4">Add Invoice Details</Typography>
-        <Divider />
+        <Typography variant="h4" style={{ marginTop: 8 }}>Add Invoice Details</Typography>
+
         <Grid container spacing={2} style={{ marginTop: 5 }}>
           <Grid item md={6}>
             <TextField
@@ -155,7 +180,7 @@ function InvoiceForm() {
             <BillingDetails billingData={billingData} setBillingData={setBillingData} />
           </Grid>
           <Grid item md={12}>
-            <ProductDetails productData={productData} setProductData={setProductData} setInvoiceData={setInvoiceData} invoiceData={invoiceData} />
+            <ProductDetails productData={productData} setProductData={setProductData} />
           </Grid>
         </Grid>
       </Container>
