@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Container, Typography, Divider, makeStyles, Grid, TextField, Checkbox, FormControlLabel } from '@material-ui/core';
 import ReceiverDetails from './forms/ReceiverDetails';
 import BillingDetails from './forms/BillingDetails';
+import ProductDetails from './ProductDetails';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -28,6 +29,11 @@ function InvoiceForm() {
     city: '',
     pincode: '',
   });
+  const [productData, setProductData] = useState([{
+    name: '',
+    quantity: 0,
+    baseAmount: 0,
+  }]);
   const [billingFlag, setBillingFlag] = useState(false);
 
   const handleDateChange = (date) => {
@@ -108,6 +114,9 @@ function InvoiceForm() {
         </Grid>
         <Grid item md={12}>
           <BillingDetails billingData={billingData} setBillingData={setBillingData} />
+        </Grid>
+        <Grid item md={12}>
+          <ProductDetails productData={productData} setProductData={setProductData} />
         </Grid>
       </Grid>
     </Container>
