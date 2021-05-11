@@ -8,7 +8,7 @@ export default function App() {
   return (
     <Router>
       <Switch>
-        <Route path="/" component={InvoiceForm} />
+        <Route path="/" exact component={InvoiceForm} />
         <Route path="/invoice/:invoiceId" component={InvoiceDetails} />
       </Switch>
     </Router>
