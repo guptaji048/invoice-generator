@@ -1,9 +1,26 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Typography, TextField, Grid } from '@material-ui/core';
 import DropDown from '../utils/DropDown';
-import { State, Maharashtra } from '../Data';
+import { State, Maharashtra, Gujarat, Haryana, UttarPradesh } from '../Data';
 
 function ReceiverDetails({ receiverData, setReceiverData }) {
+
+  const CityList = (state) => {
+    switch (state) {
+      case 'Maharashtra':
+        return Maharashtra;
+      case 'Gujarat':
+        return Gujarat;
+      case 'Haryana':
+        return Haryana;
+      case 'Uttar Pradesh':
+        return UttarPradesh;
+      default:
+        return [];
+    }
+  };
+
   return (
     <React.Fragment>
       <Typography variant="h6">Receiver Details</Typography>
@@ -39,7 +56,7 @@ function ReceiverDetails({ receiverData, setReceiverData }) {
           name="City"
           label="City"
           value={receiverData.city}
-          options={Maharashtra}
+          options={CityList(receiverData.state)}
           onChange={(e) => setReceiverData({ ...receiverData, city: e.target.value })}
         />
       </Grid>
@@ -58,4 +75,9 @@ function ReceiverDetails({ receiverData, setReceiverData }) {
   )
 }
 
-export default ReceiverDetails
+ReceiverDetails.propTypes = {
+  receiverData: PropTypes.object.isRequired,
+  setReceiverData: PropTypes.func.isRequired,
+}
+
+export default ReceiverDetails;

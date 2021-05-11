@@ -1,9 +1,26 @@
-import React from 'react'
+import React from 'react';
+import PropTypes from 'prop-types';
 import { Typography, TextField, Grid } from '@material-ui/core';
 import DropDown from '../utils/DropDown';
-import { State, Maharashtra } from '../Data';
+import { State, Maharashtra, Gujarat, Haryana, UttarPradesh } from '../Data';
 
 function BillingDetails({ billingData, setBillingData }) {
+
+  const CityList = (state) => {
+    switch (state) {
+      case 'Maharashtra':
+        return Maharashtra;
+      case 'Gujarat':
+        return Gujarat;
+      case 'Haryana':
+        return Haryana;
+      case 'Uttar Pradesh':
+        return UttarPradesh;
+      default:
+        return [];
+    }
+  }
+
   return (
     <React.Fragment>
       <Typography variant="h6">Billing Address</Typography>
@@ -31,7 +48,7 @@ function BillingDetails({ billingData, setBillingData }) {
           label="City"
           value={billingData.city}
           onChange={(e) => setBillingData({ ...billingData, city: e.target.value })}
-          options={Maharashtra}
+          options={CityList(billingData.state)}
         />
       </Grid>
       <Grid item md={6}>
@@ -49,4 +66,9 @@ function BillingDetails({ billingData, setBillingData }) {
   )
 }
 
-export default BillingDetails
+BillingDetails.propTypes = {
+  billingData: PropTypes.object.isRequired,
+  setBillingData: PropTypes.func.isRequired,
+}
+
+export default BillingDetails;
