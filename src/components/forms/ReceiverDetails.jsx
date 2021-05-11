@@ -46,25 +46,29 @@ function ReceiverDetails({ receiverData, setReceiverData, validationError }) {
         style={{ paddingBottom: 10 }}
         error={receiverData.address === '' && validationError && validationError.includes('receiverAddress')}
       />
-      <Grid item md={12} style={{ display: 'flex', flexDirection: 'row' }}>
-        <DropDown
-          name="State"
-          label="State"
-          value={receiverData.state}
-          options={State}
-          onChange={(e) => setReceiverData({ ...receiverData, state: e.target.value })}
-          error={validationError && validationError.includes('receiverState')}
-        />
-        <DropDown
-          name="City"
-          label="City"
-          value={receiverData.city}
-          options={CityList(receiverData.state)}
-          onChange={(e) => setReceiverData({ ...receiverData, city: e.target.value })}
-          error={validationError && validationError.includes('receiverCity')}
-        />
-      </Grid>
-      <Grid item md={6}>
+      <div style={{ display: 'flex', flexDirection: 'row' }}>
+        <Grid item md={6} style={{ paddingRight: 14 }}>
+          <DropDown
+            name="State"
+            label="State"
+            value={receiverData.state}
+            options={State}
+            onChange={(e) => setReceiverData({ ...receiverData, state: e.target.value })}
+            error={validationError && validationError.includes('receiverState')}
+          />
+        </Grid>
+        <Grid item md={6} style={{ paddingLeft: 2 }}>
+          <DropDown
+            name="City"
+            label="City"
+            value={receiverData.city}
+            options={CityList(State)}
+            onChange={(e) => setReceiverData({ ...receiverData, city: e.target.value })}
+            error={validationError && validationError.includes('receiverCity')}
+          />
+        </Grid>
+      </div>
+      <Grid item md={6} style={{ paddingRight: 14 }}>
         <TextField
           label="Pin Code"
           value={receiverData.pincode}

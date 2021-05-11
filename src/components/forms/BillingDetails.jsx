@@ -35,23 +35,27 @@ function BillingDetails({ billingData, setBillingData }) {
         fullWidth
         style={{ paddingBottom: 10 }}
       />
-      <Grid item md={12} style={{ display: 'flex', flexDirection: 'row' }}>
-        <DropDown
-          name="State"
-          label="State"
-          value={billingData.state}
-          onChange={(e) => setBillingData({ ...billingData, state: e.target.value })}
-          options={State}
-        />
-        <DropDown
-          name="City"
-          label="City"
-          value={billingData.city}
-          onChange={(e) => setBillingData({ ...billingData, city: e.target.value })}
-          options={CityList(billingData.state)}
-        />
-      </Grid>
-      <Grid item md={6}>
+      <div style={{ display: 'flex', flexDirection: 'row' }}>
+        <Grid item md={6} style={{ paddingRight: 14 }}>
+          <DropDown
+            name="State"
+            label="State"
+            value={billingData.state}
+            onChange={(e) => setBillingData({ ...billingData, state: e.target.value })}
+            options={State}
+          />
+        </Grid>
+        <Grid item md={6} style={{ paddingLeft: 2 }}>
+          <DropDown
+            name="City"
+            label="City"
+            value={billingData.city}
+            onChange={(e) => setBillingData({ ...billingData, city: e.target.value })}
+            options={CityList(billingData.state)}
+          />
+        </Grid>
+      </div>
+      <Grid item md={6} style={{ paddingRight: 14 }}>
         <TextField
           label="Pin Code"
           value={billingData.pincode}
