@@ -8,11 +8,14 @@ import { calcGrandTotal } from './helpers/TotalCalcHelper';
 function ProductDetails({ productData, setProductData }) {
 
   const validateData = (idx) => {
-    const temp = [];
-    temp.name = productData[idx]['Product Name'] ? '' : 'This field is required.';
-    temp.quantity = productData[idx]['Quantity'] ? '' : 'This field is required.';
-    temp.baseAmount = productData[idx][['Base Amount']] ? '' : 'This field is required.';
-    return Object.values(temp).every((x) => x === '');
+    if (productData.length !== 0) {
+      const temp = [];
+      temp.name = productData[idx]['Product Name'] ? '' : 'This field is required.';
+      temp.quantity = productData[idx]['Quantity'] !== 0 ? '' : 'This field is required.';
+      temp.baseAmount = productData[idx][['Base Amount']] !== 0 ? '' : 'This field is required.';
+      return Object.values(temp).every((x) => x === '');
+    }
+    return true;
   };
 
   const handleAddItem = () => {
