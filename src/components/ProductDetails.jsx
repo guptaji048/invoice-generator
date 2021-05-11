@@ -42,6 +42,14 @@ function ProductDetails({ productData, setProductData }) {
     setProductData(list);
   };
 
+  const calcTotal = () => {
+    let s = 0, i;
+    for (i = 0; i < productData.length; i += 1) {
+      s += productData[i].quantity * productData[i].baseAmount;
+    }
+    return s;
+  }
+
   useEffect(() => {
     console.log(productData)
   }, [productData]);
@@ -108,13 +116,23 @@ function ProductDetails({ productData, setProductData }) {
           </TableBody>
         </Table>
       </TableContainer>
-      <Button
-        onClick={() => handleAddItem()}
-        variant="container"
-        style={{ textTransform: 'none', backgroundColor: 'orange', marginBottom: 8 }}
-      >
-        Add Items
+      <Grid container md={12} style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <Grid item md={6}>
+          <Button
+            onClick={() => handleAddItem()}
+            variant="container"
+            style={{ textTransform: 'none', backgroundColor: 'orange', marginBottom: 8 }}
+          >
+            Add Items
       </Button>
+        </Grid>
+        <Grid item md={6}>
+          <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
+            <Typography variant="h6" style={{ paddingRight: 38 }}>Grand Total </Typography>
+            <Typography variant="h6">{calcTotal()}</Typography>
+          </div>
+        </Grid>
+      </Grid>
     </React.Fragment>
   )
 }
