@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Typography, Divider, makeStyles, Grid, TextField, Button, IconButton } from '@material-ui/core';
+import { Typography, Grid, TextField, Button, IconButton } from '@material-ui/core';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -7,23 +7,25 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import DeleteIcon from '@material-ui/icons/Delete';
+import { calcGrandTotal } from './helpers/TotalCalcHelper';
 
-function ProductDetails({ productData, setProductData }) {
+function ProductDetails({ productData, setProductData, setInvoiceData, invoiceData }) {
 
   const validateData = (idx) => {
     const temp = [];
-    temp.name = productData[idx].name ? '' : 'This field is required.';
-    temp.quantity = productData[idx].quantity ? '' : 'This field is required.';
-    temp.baseAmount = productData[idx].baseAmount ? '' : 'This field is required.';
+    temp.name = productData[idx]['Product Name'] ? '' : 'This field is required.';
+    temp.quantity = productData[idx]['Quantity'] ? '' : 'This field is required.';
+    temp.baseAmount = productData[idx][['Base Amount']] ? '' : 'This field is required.';
     return Object.values(temp).every((x) => x === '');
   };
 
   const handleAddItem = () => {
     if (validateData(productData.length - 1)) {
       const newProductList = [...productData, {
-        name: '',
-        quantity: 0,
-        baseAmount: 0,
+        'Product Name': '',
+        'Quantity': 0,
+        'Base Amount': 0,
+        'Total Amount': 0,
       }];
       setProductData(newProductList);
     }
@@ -40,18 +42,14 @@ function ProductDetails({ productData, setProductData }) {
     const list = [...productData];
     list[idx][name] = value;
     setProductData(list);
+    if (list[idx]['Quantity'] && list[idx]['Base Amount']) {
+      list[idx]['Total Amount'] = list[idx]['Quantity'] * list[idx]['Base Amount'];
+      setProductData(list);
+    }
   };
 
-  const calcTotal = () => {
-    let s = 0, i;
-    for (i = 0; i < productData.length; i += 1) {
-      s += productData[i].quantity * productData[i].baseAmount;
-    }
-    return s;
-  }
-
   useEffect(() => {
-    console.log(productData)
+    console.log(productData);
   }, [productData]);
 
   return (
@@ -75,8 +73,8 @@ function ProductDetails({ productData, setProductData }) {
                   <TextField
                     variant="outlined"
                     margin="dense"
-                    name="name"
-                    value={productRow.name}
+                    name="Product Name"
+                    value={productRow['Product Name']}
                     onChange={(e) => handleInputChange(e, idx)}
                   />
                 </TableCell>
@@ -84,8 +82,8 @@ function ProductDetails({ productData, setProductData }) {
                   <TextField
                     variant="outlined"
                     margin="dense"
-                    name="quantity"
-                    value={productRow.quantity}
+                    name="Quantity"
+                    value={productRow['Quantity']}
                     onChange={(e) => handleInputChange(e, idx)}
                   />
                 </TableCell>
@@ -93,13 +91,13 @@ function ProductDetails({ productData, setProductData }) {
                   <TextField
                     variant="outlined"
                     margin="dense"
-                    name="baseAmount"
-                    value={productRow.baseAmount}
+                    name="Base Amount"
+                    value={productRow['Base Amount']}
                     onChange={(e) => handleInputChange(e, idx)}
                   />
                 </TableCell>
                 <TableCell>
-                  {productData[idx].quantity && productData[idx].baseAmount ? productData[idx].quantity * productData[idx].baseAmount : 0}
+                  {productRow['Total Amount']}
                 </TableCell>
                 <TableCell>
                   <IconButton
@@ -121,7 +119,7 @@ function ProductDetails({ productData, setProductData }) {
           <Button
             onClick={() => handleAddItem()}
             variant="container"
-            style={{ textTransform: 'none', backgroundColor: 'orange', marginBottom: 8 }}
+            style={{ textTransform: 'none', backgroundColor: 'orange', marginBottom: 8, color: 'white' }}
           >
             Add Items
       </Button>
@@ -129,7 +127,7 @@ function ProductDetails({ productData, setProductData }) {
         <Grid item md={6}>
           <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
             <Typography variant="h6" style={{ paddingRight: 38 }}>Grand Total </Typography>
-            <Typography variant="h6">{calcTotal()}</Typography>
+            <Typography variant="h6">{calcGrandTotal(productData)}</Typography>
           </div>
         </Grid>
       </Grid>
