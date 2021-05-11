@@ -39,6 +39,7 @@ function InvoiceForm() {
     'Total Amount': 0,
   }]);
   const [billingFlag, setBillingFlag] = useState(false);
+  const [validationError, setValidationError] = useState();
 
   const handleDateChange = (date) => {
     var dueDate = new Date(date);
@@ -65,64 +66,94 @@ function InvoiceForm() {
     }
   };
 
+  const dataValidator = () => {
+    const err = [];
+    if (invoiceData.invoiceDate === '') {
+      err.push('invoiceDate');
+    }
+    if (invoiceData.dueDate === '') {
+      err.push('dueDate');
+    }
+    if (receiverData.name === '') {
+      err.push('receiverName');
+    }
+    if (receiverData.address === '') {
+      err.push('receiverAddress');
+    }
+    if (receiverData.state === '') {
+      err.push('receiverState');
+    }
+    if (receiverData.city === '') {
+      err.push('receiverCity');
+    }
+    if (receiverData.pincode === '') {
+      err.push('receiverPincode');
+    }
+    setValidationError(err);
+    return err;
+  }
+
   const handleSubmitData = (e) => {
     e.preventDefault();
-    const newDataObject = {
-      invoiceDate: invoiceData.invoiceDate,
-      dueDate: invoiceData.dueDate,
-      grandTotal: calcGrandTotal(productData),
-      vendorInfo: {
-        "Raised to": receiverData.name,
-        Address: receiverData.address,
-        State: receiverData.state,
-        City: receiverData.city,
-        "Pin Code": receiverData.pincode,
-      },
-      billingInfo: {
-        "Raised to": receiverData.name,
-        Address: billingData.address,
-        State: billingData.state,
-        City: billingData.city,
-        "Pin Code": billingData.pincode,
-      },
-      products: productData,
-    };
-    console.log(JSON.stringify(newDataObject));
-    const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newDataObject)
-    };
-    fetch('https://6099126599011f0017140143.mockapi.io/invoice/addinvoice', requestOptions)
-      .then((response) => response.json())
-      .then((data) => {
-        const invoiceId = data.id;
-        history.push({ pathname: generatePath("/invoice/:invoiceId", { invoiceId }) });
-        setInvoiceData({
-          invoiceDate: '',
-          dueDate: '',
+    const validationResult = dataValidator();
+    if (validationResult.length === 0) {
+      const newDataObject = {
+        invoiceDate: invoiceData.invoiceDate,
+        dueDate: invoiceData.dueDate,
+        grandTotal: calcGrandTotal(productData),
+        vendorInfo: {
+          "Raised to": receiverData.name,
+          Address: receiverData.address,
+          State: receiverData.state,
+          City: receiverData.city,
+          "Pin Code": receiverData.pincode,
+        },
+        billingInfo: {
+          "Raised to": receiverData.name,
+          Address: billingData.address,
+          State: billingData.state,
+          City: billingData.city,
+          "Pin Code": billingData.pincode,
+        },
+        products: productData,
+      };
+      console.log(JSON.stringify(newDataObject));
+      const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newDataObject)
+      };
+      fetch('https://6099126599011f0017140143.mockapi.io/invoice/addinvoice', requestOptions)
+        .then((response) => response.json())
+        .then((data) => {
+          const invoiceId = data.id;
+          history.push({ pathname: generatePath("/invoice/:invoiceId", { invoiceId }) });
+          setInvoiceData({
+            invoiceDate: '',
+            dueDate: '',
+          });
+          setReceiverData({
+            name: '',
+            address: '',
+            state: '',
+            city: '',
+            pincode: '',
+          });
+          setBillingData({
+            address: '',
+            state: '',
+            city: '',
+            pincode: '',
+          });
+          setProductData([{
+            'Product Name': '',
+            'Quantity': 0,
+            'Base Amount': 0,
+            'Total Amount': 0,
+          }]);
+          setBillingFlag(false);
         });
-        setReceiverData({
-          name: '',
-          address: '',
-          state: '',
-          city: '',
-          pincode: '',
-        });
-        setBillingData({
-          address: '',
-          state: '',
-          city: '',
-          pincode: '',
-        });
-        setProductData([{
-          'Product Name': '',
-          'Quantity': 0,
-          'Base Amount': 0,
-          'Total Amount': 0,
-        }]);
-        setBillingFlag(false);
-      });
+    }
   };
 
   useEffect(() => {
@@ -147,6 +178,7 @@ function InvoiceForm() {
               }}
               margin="dense"
               fullWidth
+              error={invoiceData.invoiceDate === '' && validationError && validationError.includes('invoiceDate')}
             />
           </Grid>
 
@@ -162,10 +194,11 @@ function InvoiceForm() {
               }}
               margin="dense"
               fullWidth
+              error={invoiceData.invoiceDate === '' && validationError && validationError.includes('dueDate')}
             />
           </Grid>
           <Grid item md={12}>
-            <ReceiverDetails receiverData={receiverData} setReceiverData={setReceiverData} />
+            <ReceiverDetails receiverData={receiverData} setReceiverData={setReceiverData} validationError={validationError} />
             <FormControlLabel
               control={
                 <Checkbox

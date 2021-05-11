@@ -4,7 +4,7 @@ import { Typography, TextField, Grid } from '@material-ui/core';
 import DropDown from '../utils/DropDown';
 import { State, Maharashtra, Gujarat, Haryana, UttarPradesh } from '../Data';
 
-function ReceiverDetails({ receiverData, setReceiverData }) {
+function ReceiverDetails({ receiverData, setReceiverData, validationError }) {
 
   const CityList = (state) => {
     switch (state) {
@@ -32,6 +32,7 @@ function ReceiverDetails({ receiverData, setReceiverData }) {
         margin="dense"
         fullWidth
         style={{ paddingBottom: 10 }}
+        error={receiverData.name === '' && validationError && validationError.includes('receiverName')}
       />
       <TextField
         label="Address"
@@ -43,6 +44,7 @@ function ReceiverDetails({ receiverData, setReceiverData }) {
         rows="4"
         fullWidth
         style={{ paddingBottom: 10 }}
+        error={receiverData.address === '' && validationError && validationError.includes('receiverAddress')}
       />
       <Grid item md={12} style={{ display: 'flex', flexDirection: 'row' }}>
         <DropDown
@@ -51,6 +53,7 @@ function ReceiverDetails({ receiverData, setReceiverData }) {
           value={receiverData.state}
           options={State}
           onChange={(e) => setReceiverData({ ...receiverData, state: e.target.value })}
+          error={validationError && validationError.includes('receiverState')}
         />
         <DropDown
           name="City"
@@ -58,6 +61,7 @@ function ReceiverDetails({ receiverData, setReceiverData }) {
           value={receiverData.city}
           options={CityList(receiverData.state)}
           onChange={(e) => setReceiverData({ ...receiverData, city: e.target.value })}
+          error={validationError && validationError.includes('receiverCity')}
         />
       </Grid>
       <Grid item md={6}>
@@ -69,6 +73,7 @@ function ReceiverDetails({ receiverData, setReceiverData }) {
           margin="dense"
           fullWidth
           style={{ paddingBottom: 10 }}
+          error={receiverData.pincode === '' && validationError && validationError.includes('receiverPincode')}
         />
       </Grid>
     </React.Fragment>
@@ -78,6 +83,11 @@ function ReceiverDetails({ receiverData, setReceiverData }) {
 ReceiverDetails.propTypes = {
   receiverData: PropTypes.object.isRequired,
   setReceiverData: PropTypes.func.isRequired,
+  validationError: PropTypes.array,
+}
+
+ReceiverDetails.defaultProps = {
+  validationError: [],
 }
 
 export default ReceiverDetails;

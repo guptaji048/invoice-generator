@@ -6,9 +6,9 @@ import {
 
 export default function DropDown(props) {
   const {
-    name, label, value, onChange, options,
+    name, label, value, onChange, options, error,
   } = props;
-
+  console.log(error);
   return (
     <FormControl variant="outlined" fullWidth margin="dense" style={{ paddingBottom: 10 }}>
       <InputLabel>{label}</InputLabel>
@@ -17,6 +17,7 @@ export default function DropDown(props) {
         name={name}
         value={value}
         onChange={onChange}
+        error={error && value.length === 0}
       >
         <MenuItem value="">None</MenuItem>
         {
@@ -36,3 +37,7 @@ DropDown.propTypes = {
   onChange: PropTypes.func.isRequired,
   options: PropTypes.array.isRequired,
 };
+
+DropDown.defaultProps = {
+  toggle: false,
+}
