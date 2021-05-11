@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory, generatePath } from 'react-router-dom';
-import { Container, Typography, Divider, makeStyles, Grid, TextField, Checkbox, FormControlLabel, Button } from '@material-ui/core';
+import { Container, Typography, makeStyles, Grid, TextField, Checkbox, FormControlLabel, Button } from '@material-ui/core';
 import ReceiverDetails from './forms/ReceiverDetails';
 import BillingDetails from './forms/BillingDetails';
 import ProductDetails from './ProductDetails';
@@ -86,7 +86,8 @@ function InvoiceForm() {
         "Pin Code": billingData.pincode,
       },
       products: productData,
-    }
+    };
+    console.log(JSON.stringify(newDataObject));
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -170,7 +171,7 @@ function InvoiceForm() {
                 <Checkbox
                   checked={billingFlag}
                   onChange={() => setBillingFlag(!billingFlag)}
-                  color="primary"
+                  style={{ color: '#0082d6' }}
                 />
               }
               label="Click if billing address same as receiver address"
