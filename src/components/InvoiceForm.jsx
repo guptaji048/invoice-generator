@@ -3,8 +3,9 @@ import { Container, Typography, Divider, makeStyles, Grid, TextField, Checkbox, 
 import ReceiverDetails from './forms/ReceiverDetails';
 import BillingDetails from './forms/BillingDetails';
 import ProductDetails from './ProductDetails';
+import { calcGrandTotal } from './helpers/TotalCalcHelper';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   container: {
     border: '1px solid #e0e0e0',
   }
@@ -31,10 +32,10 @@ function InvoiceForm() {
     pincode: '',
   });
   const [productData, setProductData] = useState([{
-    name: '',
-    quantity: 0,
-    baseAmount: 0,
-    totalAmount: 0,
+    'Product Name': '',
+    'Quantity': 0,
+    'Base Amount': 0,
+    'Total Amount': 0,
   }]);
   const [billingFlag, setBillingFlag] = useState(false);
 
@@ -43,7 +44,7 @@ function InvoiceForm() {
     dueDate.setDate(dueDate.getDate() + 30);
     setInvoiceData({ ...invoiceData, invoiceDate: date, dueDate: dueDate.toISOString().split('T')[0] })
     console.log(invoiceData);
-  }
+  };
 
   const handleBillingCheckbox = () => {
     if (billingFlag === true) {
@@ -61,7 +62,42 @@ function InvoiceForm() {
         pincode: '',
       });
     }
-  }
+  };
+
+  const handleSubmitData = (e) => {
+    e.preventDefault();
+    const newDataObject = {
+      id: 18,
+      invoiceDate: invoiceData.invoiceDate,
+      dueDate: invoiceData.dueDate,
+      grandTotal: calcGrandTotal(productData),
+      vendorInfo: {
+        "Raised to": receiverData.name,
+        Address: receiverData.address,
+        State: receiverData.state,
+        City: receiverData.city,
+        "Pin Code": receiverData.pincode,
+      },
+      billingInfo: {
+        "Raised to": receiverData.name,
+        Address: billingData.address,
+        State: billingData.state,
+        City: billingData.state,
+        "Pin Code": billingData.pincode,
+      },
+      products: productData,
+    }
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newDataObject)
+    };
+    fetch('https://6099126599011f0017140143.mockapi.io/invoice/addinvoice', requestOptions)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+      });
+  };
 
   useEffect(() => {
     handleBillingCheckbox();
@@ -123,7 +159,13 @@ function InvoiceForm() {
           </Grid>
         </Grid>
       </Container>
-      <Button variant="contained" style={{ width: '25%', marginTop: 10, backgroundColor: '#0082d6', color: 'white' }}>Submit</Button>
+      <Button
+        variant="contained"
+        style={{ width: '25%', marginTop: 10, backgroundColor: '#0082d6', color: 'white' }}
+        onClick={(e) => { handleSubmitData(e) }}
+      >
+        Submit
+      </Button>
     </div>
   )
 }
