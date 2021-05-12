@@ -62,7 +62,7 @@ function ReceiverDetails({ receiverData, setReceiverData, validationError }) {
             name="City"
             label="City"
             value={receiverData.city}
-            options={CityList(State)}
+            options={CityList(receiverData.state)}
             onChange={(e) => setReceiverData({ ...receiverData, city: e.target.value })}
             error={validationError && validationError.includes('receiverCity')}
           />
